@@ -402,7 +402,7 @@ export class MockFactory {
       deploymentName: "myDeploymentName",
       region: "eastus2",
       stage: "dev",
-      runtime: Runtime.NODE10,
+      runtime: Runtime.NODE14,
     }
   }
 

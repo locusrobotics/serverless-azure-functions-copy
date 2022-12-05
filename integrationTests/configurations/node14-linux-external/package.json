@@ -1,5 +1,5 @@
 {
-  "name": "node10-windows-webpack",
+  "name": "node14-linux",
   "version": "1.0.0",
   "description": "Azure Functions sample for the Serverless framework",
   "scripts": {
@@ -12,9 +12,6 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "serverless-azure-functions": "^1.0.2-22",
-    "serverless-webpack": "^5.3.1",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "serverless-azure-functions": "^1.0.0"
   }
 }

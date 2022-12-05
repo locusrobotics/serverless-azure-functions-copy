@@ -61,13 +61,13 @@ describe("Base Service", () => {
   let serverless: Serverless;
 
   const serviceName = "my-custom-service";
-  
+
   const slsConfig = {
     service: serviceName,
     provider: {
       resourceGroup: "My-Resource-Group",
       deploymentName: "My-Deployment",
-      runtime: Runtime.NODE10
+      runtime: Runtime.NODE14
     },
   };
 
@@ -104,7 +104,7 @@ describe("Base Service", () => {
     expect(mockService).not.toBeNull();
     expect(serverless.service.provider.region).toEqual("westus");
     expect(serverless.service.provider.stage).toEqual("dev");
-  });  
+  });
 
   it("Fails if credentials have not been set in serverless config", () => {
     serverless.variables["azureCredentials"] = null;
@@ -164,7 +164,7 @@ describe("Base Service", () => {
 
   it("calls LoggingService", () => {
     const mockService = new MockService(serverless);
-    
+
     mockService.err("error");
     expect(LoggingService.prototype.error).toBeCalledWith("error");
 

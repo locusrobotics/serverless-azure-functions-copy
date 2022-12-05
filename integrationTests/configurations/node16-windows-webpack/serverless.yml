@@ -1,12 +1,12 @@
-service: nd10-lin
+service: nd16-win-web
 
 provider:
   name: azure
   prefix: int
   stage: qa
   region: West Europe
-  runtime: nodejs10
-  os: linux
+  runtime: nodejs16
+  os: windows
   apim: true
 
   environment:
@@ -28,5 +28,5 @@ functions:
         methods:
           - GET
         authLevel: anonymous
-          
- 
+
+

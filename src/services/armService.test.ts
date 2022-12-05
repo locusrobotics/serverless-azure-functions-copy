@@ -69,7 +69,7 @@ describe("Arm Service", () => {
     });
 
     it("Creates a custom ARM template from well-known type", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType("premium");
 
       expect(deployment).not.toBeNull();
@@ -79,7 +79,7 @@ describe("Arm Service", () => {
 
     it("Creates a custom ARM template (with APIM support) from well-known type", async () => {
       sls.service.provider["apim"] = MockFactory.createTestApimConfig();
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
 
       expect(deployment).not.toBeNull();
@@ -94,7 +94,7 @@ describe("Arm Service", () => {
     });
 
     it("Premium template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
 
       expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("ElasticPremium");
@@ -117,7 +117,7 @@ describe("Arm Service", () => {
     });
 
     it("ASE template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.AppServiceEnvironment);
 
       expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("Isolated");
@@ -143,7 +143,7 @@ describe("Arm Service", () => {
     });
 
     it("Consumption template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/hostingEnvironments")).toBeUndefined();
@@ -274,7 +274,7 @@ describe("Arm Service", () => {
       await service.deployTemplate(deployment);
 
       const appSettings: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites\")].properties.siteConfig.appSettings[*]");
-     
+
       expect(appSettings.find((setting) => setting.name === "PARAM_1")).toEqual({ name: "PARAM_1", value: environmentConfig.PARAM_1 });
       expect(appSettings.find((setting) => setting.name === "PARAM_2")).toEqual({ name: "PARAM_2", value: environmentConfig.PARAM_2 });
       expect(appSettings.find((setting) => setting.name === "PARAM_3")).toEqual({ name: "PARAM_3", value: environmentConfig.PARAM_3 });
