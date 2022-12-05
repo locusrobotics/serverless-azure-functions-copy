@@ -297,8 +297,8 @@ describe("Function App Resource", () => {
     });
 
     describe("Windows", () => {
-      it("gets correct parameters - node 10", () => {
-        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE10);
+      it("gets correct parameters - node 14", () => {
+        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE14);
 
         const resource = new FunctionAppResource();
 
@@ -309,7 +309,7 @@ describe("Function App Resource", () => {
 
         assertWindowsParams(params);
 
-        expect(functionAppNodeVersion.value).toEqual("~10");
+        expect(functionAppNodeVersion.value).toEqual("~14");
       });
 
       it("gets correct parameters - node 12", () => {

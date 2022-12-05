@@ -267,7 +267,7 @@ describe("Arm Service", () => {
       };
 
       sls.service.provider["environment"] = environmentConfig
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       sls.service.provider["os"] = "windows";
 
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
@@ -281,7 +281,7 @@ describe("Arm Service", () => {
     });
 
     it("Deploys ARM template via resources REST API", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       await service.deployTemplate(deployment);
@@ -345,7 +345,7 @@ describe("Arm Service", () => {
     });
 
     it("Does not try to include paramaters with a value that is undefined", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE14;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       expect(deployment.parameters.functionAppExtensionVersion).not.toBeUndefined();
