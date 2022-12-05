@@ -68,4 +68,24 @@ describe("Bindings", () => {
       name: userSettings.name,
     });
   });
+
+  it("Gets the eventhub binding", async () => {
+    const serverless = MockFactory.createTestServerless();
+    const parsedBindings = await BindingUtils.getBindingsMetaData(serverless);
+    const bindingType = "eventHubTrigger";
+    const userSettings = {
+      cardinality: "many",
+      name: "messages",
+      connection: "Endpoint=sb:/",
+      consumerGroup: "group1",
+    };
+
+    const bindingTypes = parsedBindings.bindingTypes;
+    const bindingTypeIndex = bindingTypes.indexOf(bindingType);
+    const bindingSettings = parsedBindings.bindingSettings[bindingTypeIndex];
+
+    const binding = BindingUtils.getBinding(bindingType, bindingSettings, userSettings);
+    console.log(binding);
+    expect(binding).toMatchObject(userSettings);
+  });
 });
