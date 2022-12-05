@@ -61,7 +61,7 @@ interface FunctionAppSetting {
 }
 
 export class FunctionAppResource implements ArmResourceTemplateGenerator {
-  public static getResourceName(config: ServerlessAzureConfig) {
+  public static getResourceName(config: ServerlessAzureConfig, deploymentSlot?: string) {
     const safeServiceName = config.service.replace(/\s/g, "-");
     const options: AzureNamingServiceOptions = {
       config,
@@ -70,42 +70,96 @@ export class FunctionAppResource implements ArmResourceTemplateGenerator {
       includeHash: false,
     }
 
-    return AzureNamingService.getResourceName(options);
+    const name = (deploymentSlot && !["prod", "production"].includes(deploymentSlot))
+      ? `${AzureNamingService.getResourceName(options)}/slots/${deploymentSlot}`
+      : AzureNamingService.getResourceName(options);
+    return name;
+  }
+
+  public static getFunctionSlot(config: ServerlessAzureConfig) {
+    const safeSlotName = (config.provider.deployment && config.provider.deployment.slot) ? config.provider.deployment.slot.replace(/\s/g, "-") : null;
+    return safeSlotName;
   }
 
   public getTemplate(config: ServerlessAzureConfig): ArmResourceTemplate {
-    return {
+    const defaultArmTemplate = {
       "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
       "contentVersion": "1.0.0.0",
       parameters: this.getTemplateParameters(),
       "variables": {},
       "resources": [
-        {
-          "type": "Microsoft.Web/sites",
-          "apiVersion": "2016-03-01",
-          name: "[parameters('functionAppName')]",
-          "location": "[parameters('location')]",
-          "identity": {
-            "type": ArmParamType.SystemAssigned
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-            "[concat('microsoft.insights/components/', parameters('appInsightsName'))]"
-          ],
-          "kind": "[parameters('functionAppKind')]",
-          "properties": {
-            "siteConfig": {
-              appSettings: this.getFunctionAppSettings(config), 
-              "linuxFxVersion": "[parameters('linuxFxVersion')]",
-            },
-            "reserved": "[parameters('functionAppReserved')]",
-            name: "[parameters('functionAppName')]",
-            "clientAffinityEnabled": false,
-            "hostingEnvironment": ""
-          }
-        }
       ]
     };
+    const slot = FunctionAppResource.getFunctionSlot(config);
+    if (!slot || ["production", "prod"].includes(slot)) {
+      // deploy production site
+      defaultArmTemplate.resources.push({
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2016-03-01",
+        name: "[parameters('functionAppName')]",
+        "location": "[parameters('location')]",
+        "identity": {
+          "type": ArmParamType.SystemAssigned
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+          "[concat('microsoft.insights/components/', parameters('appInsightsName'))]"
+        ],
+        "kind": "[parameters('functionAppKind')]",
+        "properties": {
+          "siteConfig": {
+            appSettings: this.getFunctionAppSettings(config),
+            "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          },
+          "reserved": "[parameters('functionAppReserved')]",
+          name: "[parameters('functionAppName')]",
+          "clientAffinityEnabled": false,
+          "hostingEnvironment": ""
+        },
+        "resources": [
+          // add slotconfignames to set sticky appSettings variables
+          // See sticky section: https://anthonychu.ca/post/azure-app-service-resource-templates-tips-tricks/
+          {
+            "apiVersion": "2015-08-01",
+            "name": "slotconfignames",
+            "type": "config",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/Sites', parameters('functionAppName'))]"
+            ],
+            "properties": {
+              "appSettingNames": [],
+            }
+          }
+        ]
+      });
+    } else {
+      // slot is being deployed
+      defaultArmTemplate.resources.push({
+        "type": "Microsoft.Web/sites/slots",
+        "apiVersion": "2016-03-01",
+        "name": "[concat(parameters('functionAppName'), '/', parameters('functionAppSlot'))]",
+        "location": "[parameters('location')]",
+        "identity": {
+          "type": ArmParamType.SystemAssigned
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+          "[concat('microsoft.insights/components/', parameters('appInsightsName'))]"
+        ],
+        "kind": "[parameters('functionAppKind')]",
+        "properties": {
+          "siteConfig": {
+            appSettings: this.getFunctionAppSettings(config),
+            "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          },
+          "reserved": "[parameters('functionAppReserved')]",
+          "name": "[concat(parameters('functionAppName'), '(', parameters('functionAppSlot'), ')')]",
+          "clientAffinityEnabled": false,
+          "hostingEnvironment": ""
+        },
+      });
+    }
+    return defaultArmTemplate;
   }
 
   public getParameters(config: ServerlessAzureConfig): ArmParameters {
@@ -118,6 +172,9 @@ export class FunctionAppResource implements ArmResourceTemplateGenerator {
     const params: FunctionAppParams = {
       functionAppName: {
         value: FunctionAppResource.getResourceName(config),
+      },
+      functionAppSlot: {
+        value: FunctionAppResource.getFunctionSlot(config),
       },
       functionAppNodeVersion: {
         value: (isNodeRuntime(runtime))

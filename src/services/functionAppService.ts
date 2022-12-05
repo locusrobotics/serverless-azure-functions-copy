@@ -28,8 +28,9 @@ export class FunctionAppService extends BaseService {
     this.blobService = new AzureBlobStorageService(serverless, options);
   }
 
-  public async get(): Promise<Site> {
-    const response: any = await this.webClient.webApps.get(this.resourceGroup, FunctionAppResource.getResourceName(this.config));
+  public async get(slot?: string): Promise<Site> {
+    const name = FunctionAppResource.getResourceName(this.config, slot);
+    const response: any = await this.webClient.webApps.get(this.resourceGroup, name);
     if (response.error && (response.error.code === "ResourceNotFound" || response.error.code === "ResourceGroupNotFound")) {
       this.log(this.resourceGroup);
       this.log(FunctionAppResource.getResourceName(this.config));
@@ -182,8 +183,8 @@ export class FunctionAppService extends BaseService {
    * create all necessary resources as defined in src/provider/armTemplates
    *    resource-group, storage account, app service plan, and app service at the minimum
    */
-  public async deploy() {
-    this.log(`Creating function app: ${FunctionAppResource.getResourceName(this.config)}`);
+  public async deploy(deploymentSlot?: string) {
+    this.log(`Creating function app: ${FunctionAppResource.getResourceName(this.config, deploymentSlot)}`);
 
     const armService = new ArmService(this.serverless, this.options);
     const { armTemplate, type } = this.config.provider;
@@ -194,7 +195,13 @@ export class FunctionAppService extends BaseService {
     await armService.deployTemplate(deployment);
 
     // Return function app
-    return await this.get();
+    return await this.get(deploymentSlot);
+  }
+
+  public async swap(source: string, target: string) {
+    const functionApp = await this.get();
+    this.log(`Performing swap on ${functionApp.name} from ${source} to ${target}...`);
+    await this.webClient.webApps.swapSlotSlot(this.resourceGroup, functionApp.name, { targetSlot: target, preserveVnet: true }, source);
   }
 
   public async uploadZippedArtifactToFunctionApp(functionApp: Site, functionZipFile: string) {
@@ -329,8 +336,9 @@ export class FunctionAppService extends BaseService {
    * @param functionApp The function app / web site
    */
   private getScmDomain(functionApp: Site) {
-    return functionApp.enabledHostNames.find((hostName: string) => {
+    const domain = functionApp.enabledHostNames.find((hostName: string) => {
       return hostName.includes(".scm.") && hostName.endsWith(".azurewebsites.net");
     });
+    return domain;
   }
 }

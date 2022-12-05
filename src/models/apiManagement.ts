@@ -6,6 +6,10 @@ import { ApiContract, BackendContract } from "@azure/arm-apimanagement/esm/model
 export interface ApiManagementConfig {
   /** The name of the APIM azure resource */
   name: string;
+  /** The subscription of the APIM azure resource */
+  apimSubscriptionId?: string;
+  /** The name of the APIM azure resource group */
+  resourceGroup: string;
   /** The API contract configuration */
   apis: ApiContract[];
   /** The API's backend contract configuration */
@@ -20,6 +24,8 @@ export interface ApiManagementConfig {
   ipFilters?: ApiIpFilterPolicy[];
   /** The API's header policies */
   checkHeaders?: ApiCheckHeaderPolicy[];
+  /** Whether or not the APIM is included in the ARM template  */
+  skipArmTemplate?: boolean;
   /** The pricing SKU for the APIM instance */
   sku?: {
     /** The SKU name, (consumption | developer | basic | standard | premium) */

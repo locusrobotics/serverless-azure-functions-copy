@@ -42,7 +42,9 @@ export class ArmService extends BaseService {
     const mergedTemplate = template.getTemplate(this.config);
     let parameters = template.getParameters(this.config);
 
-    if (this.config.provider.apim) {
+    const apimProvider = this.config.provider.apim;
+
+    if (apimProvider && !(apimProvider.skipArmTemplate && apimProvider.skipArmTemplate.toString() === "true")) {
       const apimTemplate = apimResource.getTemplate();
       const apimParameters = apimResource.getParameters(this.config);
 
@@ -60,6 +62,12 @@ export class ArmService extends BaseService {
         ...apimParameters,
       };
     }
+
+    // add tags to all resources
+    mergedTemplate.resources = mergedTemplate.resources.map(r => ({
+      ...r,
+      tags: this.config.provider.tags,
+    }));
 
     return {
       template: mergedTemplate,
@@ -102,7 +110,7 @@ export class ArmService extends BaseService {
     }
 
     deployment.parameters = deployment.parameters || {};
-    
+
     for (const key of Object.keys(deployment.parameters)) {
       if (!deployment.parameters[key].value) {
         delete deployment.parameters[key];
@@ -143,7 +151,7 @@ export class ArmService extends BaseService {
   }
 
   private areDeploymentsEqual(current: ArmDeployment, previous: ArmDeployment): boolean {
-    if (!current || !previous) {
+    if (!current || !previous || !previous.template || !previous.parameters) {
       return false;
     }
     const mergedDefaultParameters = this.mergeDefaultParams(current.parameters, current.template.parameters);
@@ -233,12 +241,18 @@ export class ArmService extends BaseService {
     // Check if there are custom environment variables defined that need to be
     // added to the ARM template used in the deployment.
     const environmentVariables = this.config.provider.environment;
+    const slotStickyEnvironmentVariables = this.config.provider.deployment.slotStickyEnvironmentVariables;
     if (environmentVariables) {
       this.log("-> Merging environment configuration");
+      const slot = this.config.provider.deployment.slot
+      const isSlot = slot && !["production", "prod"].includes(slot);
+      const functionType = isSlot ? "Microsoft.Web/sites/slots" : "Microsoft.Web/sites";
 
       // This is a json path expression
       // Learn more @ https://goessner.net/articles/JsonPath/index.html#e2
-      const appSettingsPath = "$.resources[?(@.type==\"Microsoft.Web/sites\")].properties.siteConfig.appSettings";
+      const appSettingsPath = `$.resources[?(@.type==\"${functionType}\")].properties.siteConfig.appSettings`;
+      // For sticky variables, https://anthonychu.ca/post/azure-app-service-resource-templates-tips-tricks/
+      const slotConfigNamesPath = "$.resources[?(@.type==\"Microsoft.Web/sites\")].resources[?(@.name==\"slotconfignames\")].properties.appSettingNames";
 
       // Merges serverless yaml environment configuration into the app settings of the template
       jsonpath.apply(deployment.template, appSettingsPath, function (appSettingsList) {
@@ -251,6 +265,16 @@ export class ArmService extends BaseService {
 
         return appSettingsList;
       });
+
+      // 'appSettingNames' can only be set when deploying to the function, not the slot
+      if (!isSlot && slotStickyEnvironmentVariables) {
+        jsonpath.apply(deployment.template, slotConfigNamesPath, function (appSettingsList) {
+          slotStickyEnvironmentVariables.forEach(function (key) {
+            appSettingsList.push(key);
+          });
+          return appSettingsList;
+        });
+      }
     }
   }
 }

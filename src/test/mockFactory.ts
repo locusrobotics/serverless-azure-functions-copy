@@ -27,13 +27,13 @@ function getAttribute(object: any, prop: string, defaultValue: any): any {
 }
 
 export class MockFactory {
-  public static createTestServerless(config?: any): Serverless {
+  public static createTestServerless(config?: any, provider?: ServerlessAzureProvider): Serverless {
     const sls = new Serverless(config);
     sls.utils = getAttribute(config, "utils", MockFactory.createTestUtils());
     sls.cli = getAttribute(config, "cli", MockFactory.createTestCli());
     sls.pluginManager = getAttribute(config, "pluginManager", MockFactory.createTestPluginManager());
     sls.variables = getAttribute(config, "variables", MockFactory.createTestVariables());
-    sls.service = getAttribute(config, "service", MockFactory.createTestService());
+    sls.service = getAttribute(config, "service", MockFactory.createTestService(null, provider));
     sls.config.servicePath = "";
     sls.setProvider = jest.fn();
     sls["processedInput"] = {
@@ -43,7 +43,7 @@ export class MockFactory {
     return sls;
   }
 
-  public static createTestService(functions?): Service {
+  public static createTestService(functions?, provider?: ServerlessAzureProvider): Service {
     if (!functions) {
       functions = MockFactory.createTestSlsFunctionConfig()
     }
@@ -61,7 +61,7 @@ export class MockFactory {
       update: jest.fn(),
       validate: jest.fn(),
       custom: null,
-      provider: MockFactory.createTestAzureServiceProvider(),
+      provider: MockFactory.createTestAzureServiceProvider(provider),
       service: serviceName,
       artifact: "app.zip",
       functions,
@@ -88,6 +88,7 @@ export class MockFactory {
       function: null,
       noDeploy: null,
       region: null,
+      slot: null,
       stage: null,
       watch: null,
       ...options
@@ -394,8 +395,8 @@ export class MockFactory {
     return result;
   }
 
-  public static createTestAzureServiceProvider(): ServerlessAzureProvider {
-    return {
+  public static createTestAzureServiceProvider(provider?: ServerlessAzureProvider): ServerlessAzureProvider {
+    const args = {
       name: "azure",
       prefix: "sls",
       resourceGroup: "myResourceGroup",
@@ -403,7 +404,9 @@ export class MockFactory {
       region: "eastus2",
       stage: "dev",
       runtime: Runtime.NODE14,
-    }
+      ...provider
+    } as ServerlessAzureProvider
+    return args;
   }
 
   public static createTestServicePrincipalEnvVariables(): ServicePrincipalEnvVariables {

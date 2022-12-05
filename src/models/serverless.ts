@@ -31,6 +31,8 @@ export interface DeploymentConfig {
   rollback?: boolean;
   container?: string;
   external?: boolean;
+  slot?: string;
+  slotStickyEnvironmentVariables?: [string];
 }
 
 export interface ServerlessAzureProvider {

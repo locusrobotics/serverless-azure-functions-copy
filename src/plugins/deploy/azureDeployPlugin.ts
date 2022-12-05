@@ -1,23 +1,25 @@
 import fs from "fs";
 import Serverless from "serverless";
 import { FunctionAppService } from "../../services/functionAppService";
-import { AzureLoginOptions } from "../../services/loginService";
+import { ServerlessAzureOptions } from "../../models/serverless";
 import { ResourceService } from "../../services/resourceService";
+import { ConfigService } from "../../services/configService";
 import { AzureBasePlugin } from "../azureBasePlugin";
 import { ApimService } from "../../services/apimService";
 import { constants } from "../../shared/constants";
 import { AzureInfoService } from "../../services/infoService";
 
-export class AzureDeployPlugin extends AzureBasePlugin<AzureLoginOptions> {
+export class AzureDeployPlugin extends AzureBasePlugin<ServerlessAzureOptions> {
   public commands: any;
 
-  public constructor(serverless: Serverless, options: AzureLoginOptions) {
+  public constructor(serverless: Serverless, options: ServerlessAzureOptions) {
     super(serverless, options);
 
     this.hooks = {
       "deploy:deploy": this.deploy.bind(this),
       "deploy:list:list": this.list.bind(this),
       "deploy:apim:apim": this.deployApim.bind(this),
+      "deploy:swap:swap": this.swap.bind(this),
     };
 
     this.commands = {
@@ -33,6 +35,22 @@ export class AzureDeployPlugin extends AzureBasePlugin<AzureLoginOptions> {
           apim: {
             usage: "Deploys APIM",
             lifecycleEvents: ["apim"]
+          },
+          swap: {
+            usage: "Swap slots",
+            lifecycleEvents: ["swap"],
+            options: {
+              from: {
+                usage: "Source slot, the one that will be promoted",
+                shortcut: "f",
+                required: true,
+              },
+              to: {
+                usage: "Target slot",
+                shortcut: "t",
+                required: true,
+              }
+            }
           }
         },
         options: {
@@ -62,13 +80,20 @@ export class AzureDeployPlugin extends AzureBasePlugin<AzureLoginOptions> {
     }
     const resourceService = new ResourceService(this.serverless, this.options);
     const functionAppService = new FunctionAppService(this.serverless, this.options);
+    const configService = new ConfigService(this.serverless, this.options);
     const zipFile = functionAppService.getFunctionZipFile();
     if (!fs.existsSync(zipFile)) {
       throw new Error(`Function app zip file '${zipFile}' does not exist`);
     }
     await resourceService.deployResourceGroup();
-    const functionApp = await functionAppService.deploy();
+    const deploymentSlot = configService.getDeploymentSlot();
+    const functionApp = await functionAppService.deploy(deploymentSlot);
     await functionAppService.uploadFunctions(functionApp);
+  }
+
+  private async swap() {
+    const functionAppService = new FunctionAppService(this.serverless, this.options);
+    await functionAppService.swap(this.options["from"], this.options["to"]);
   }
 
   /**

@@ -1,17 +1,19 @@
 import { Site } from "@azure/arm-appservice/esm/models";
 import Serverless from "serverless";
-import { ServerlessAzureOptions, ServerlessAzureConfig } from "../../models/serverless";
+import { DeploymentConfig, ServerlessAzureConfig, ServerlessAzureOptions, ServerlessAzureProvider } from "../../models/serverless";
+import { ApimService } from "../../services/apimService";
+import { ConfigService } from "../../services/configService";
+import { FunctionAppService } from "../../services/functionAppService";
+import { ResourceService } from "../../services/resourceService";
 import { MockFactory } from "../../test/mockFactory";
 import { invokeHook } from "../../test/utils";
 import { AzureDeployPlugin } from "./azureDeployPlugin";
 import mockFs  from "mock-fs"
 
+jest.mock("../../services/apimService");
 jest.mock("../../services/functionAppService");
-import { FunctionAppService } from "../../services/functionAppService";
-
 jest.mock("../../services/resourceService");
-import { ResourceService } from "../../services/resourceService";
-import { ApimService } from "../../services/apimService";
+jest.mock("../../services/configService");
 
 describe("Deploy plugin", () => {
   let sls: Serverless;
@@ -46,16 +48,19 @@ describe("Deploy plugin", () => {
     const deployResourceGroup = jest.fn();
     const functionAppStub: Site = MockFactory.createTestSite();
     const deploy = jest.fn(() => Promise.resolve(functionAppStub));
+    const getDeploymentSlot = jest.fn(() => "");
     const uploadFunctions = jest.fn();
 
     ResourceService.prototype.deployResourceGroup = deployResourceGroup;
     FunctionAppService.prototype.deploy = deploy;
     FunctionAppService.prototype.uploadFunctions = uploadFunctions;
+    ConfigService.prototype.getDeploymentSlot = getDeploymentSlot;
 
     await invokeHook(plugin, "deploy:deploy");
 
     expect(deployResourceGroup).toBeCalled();
     expect(deploy).toBeCalled();
+    expect(getDeploymentSlot).toBeCalled();
     expect(uploadFunctions).toBeCalledWith(functionAppStub);
   });
 
@@ -99,5 +104,46 @@ describe("Deploy plugin", () => {
     FunctionAppService.prototype.getFunctionZipFile = jest.fn(() => "notExisting.zip");
     await expect(invokeHook(plugin, "deploy:deploy"))
       .rejects.toThrow(/Function app zip file '.*' does not exist/)
+  });
+
+  it.each([
+    ["staging", "staging", "staging"],
+    ["staging", "canary", "canary"],
+    ["staging", "production", "production"],
+    ["canary", "canary", "canary"],
+    ["canary", "staging", "staging"],
+    ["canary", "production", "production"],
+    ["prod", "prod", "prod"],
+    ["production", "production", "production"],
+    ["", "", "staging"],
+  ])("given configured slot: %s, and --slot %s, should use correct slot", async (configuredSlot: string, optionSlot: string, correctSlot: string) => {
+    const deployResourceGroup = jest.fn();
+    const functionAppStub: Site = MockFactory.createTestSite();
+    const deploy = jest.fn(() => Promise.resolve(functionAppStub));
+    const getDeploymentSlot = jest.fn(() => correctSlot);
+    const uploadFunctions = jest.fn();
+
+    // The slot mocks what would be set in the serverless.yml for the slot
+    sls = MockFactory.createTestServerless(null, {
+      deployment: {
+        slot: configuredSlot
+      } as DeploymentConfig
+    } as ServerlessAzureProvider);
+
+    // This mimicks what the slot is passed in through the command line
+    options = MockFactory.createTestServerlessOptions({
+      slot: optionSlot
+    });
+    plugin = new AzureDeployPlugin(sls, options);
+
+    ResourceService.prototype.deployResourceGroup = deployResourceGroup;
+    FunctionAppService.prototype.deploy = deploy;
+    FunctionAppService.prototype.uploadFunctions = uploadFunctions;
+    ConfigService.prototype.getDeploymentSlot = getDeploymentSlot;
+
+    await expect(invokeHook(plugin, "deploy:deploy")).resolves.toBeFalsy();
+    expect(deployResourceGroup).toBeCalled();
+    expect(deploy).toBeCalledWith(correctSlot)
+    expect(uploadFunctions).toBeCalledWith(functionAppStub);
   });
 });
