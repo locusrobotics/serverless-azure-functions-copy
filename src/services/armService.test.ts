@@ -1,12 +1,12 @@
-import Serverless from "serverless";
-import { MockFactory } from "../test/mockFactory";
-import { ArmService } from "./armService";
-import { ArmResourceTemplate, ArmTemplateType, ArmDeployment, ArmTemplateProvisioningState, ArmParamType } from "../models/armTemplates";
-import { ArmTemplateConfig, ServerlessAzureOptions } from "../models/serverless";
-import mockFs from "mock-fs";
-import jsonpath from "jsonpath";
 import { Deployments } from "@azure/arm-resources";
 import { Deployment, DeploymentExtended } from "@azure/arm-resources/esm/models";
+import jsonpath from "jsonpath";
+import mockFs from "mock-fs";
+import Serverless from "serverless";
+import { ArmDeployment, ArmParamType, ArmResourceTemplate, ArmTemplateProvisioningState, ArmTemplateType } from "../models/armTemplates";
+import { ArmTemplateConfig, ServerlessAzureOptions } from "../models/serverless";
+import { MockFactory } from "../test/mockFactory";
+import { ArmService } from "./armService";
 import { ResourceService } from "./resourceService";
 import { DeploymentExtendedError } from "../models/azureProvider";
 import { Runtime } from "../config/runtime";
@@ -69,8 +69,8 @@ describe("Arm Service", () => {
     });
 
     it("Creates a custom ARM template from well-known type", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
-      const deployment = await service.createDeploymentFromType("premium");
+      sls.service.provider.runtime = Runtime.NODE12;
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
 
       expect(deployment).not.toBeNull();
       expect(Object.keys(deployment.parameters).length).toBeGreaterThan(0);
@@ -79,7 +79,7 @@ describe("Arm Service", () => {
 
     it("Creates a custom ARM template (with APIM support) from well-known type", async () => {
       sls.service.provider["apim"] = MockFactory.createTestApimConfig();
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
 
       expect(deployment).not.toBeNull();
@@ -89,12 +89,25 @@ describe("Arm Service", () => {
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.ApiManagement/service")).not.toBeNull();
     });
 
+    it("Creates a custom ARM template that skips APIM template deployment from well-known type", async () => {
+      sls.service.provider["apim"] = MockFactory.createTestApimConfig();
+      sls.service.provider.runtime = Runtime.NODE12;
+      sls.service.provider["apim"].skipArmTemplate = true;
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
+
+      expect(deployment).not.toBeNull();
+      expect(Object.keys(deployment.parameters).length).toBeGreaterThan(0);
+      expect(deployment.template.resources.length).toBeGreaterThan(0);
+
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.ApiManagement/service")).toBeUndefined();
+    });
+
     it("throws error when specified type is not found", async () => {
       await expect(service.createDeploymentFromType("not-found")).rejects.not.toBeNull();
     });
 
     it("Premium template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
 
       expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("ElasticPremium");
@@ -103,6 +116,7 @@ describe("Arm Service", () => {
       // Should not contain
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/hostingEnvironments")).toBeUndefined();
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Network/virtualNetworks")).toBeUndefined();
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/sites/slots")).toBeUndefined();
 
       // Should contain
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/serverfarms")).not.toBeNull();
@@ -116,8 +130,31 @@ describe("Arm Service", () => {
       expect(functionApp.properties.serverFarmId).toEqual("[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]");
     });
 
+
+    it("Premium template includes correct resources with slots", async () => {
+      sls.service.provider.runtime = "nodejs12.x";
+      sls.service.provider.deployment = {
+        slot: "staging",
+      };
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
+
+      expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("ElasticPremium");
+      expect(deployment.template.parameters.appServicePlanSkuName.defaultValue).toEqual("EP1");
+
+      // Should not contain
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/hostingEnvironments")).toBeUndefined();
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Network/virtualNetworks")).toBeUndefined();
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/sites")).toBeUndefined();
+
+      // Should contain
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/serverfarms")).not.toBeNull();
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/sites/slots")).not.toBeNull();
+      expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Storage/storageAccounts")).not.toBeNull();
+      expect(deployment.template.resources.find((resource) => resource.type === "microsoft.insights/components")).not.toBeNull();
+    });
+
     it("ASE template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.AppServiceEnvironment);
 
       expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("Isolated");
@@ -143,7 +180,7 @@ describe("Arm Service", () => {
     });
 
     it("Consumption template includes correct resources", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/hostingEnvironments")).toBeUndefined();
@@ -154,6 +191,20 @@ describe("Arm Service", () => {
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Web/sites")).not.toBeNull();
       expect(deployment.template.resources.find((resource) => resource.type === "Microsoft.Storage/storageAccounts")).not.toBeNull();
       expect(deployment.template.resources.find((resource) => resource.type === "microsoft.insights/components")).not.toBeNull();
+    });
+
+    it("Premium template includes tags in resource", async () => {
+      sls.service.provider.runtime = "nodejs12.x";
+      sls.service.provider.tags = {
+        environment: "dev",
+      };
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Premium);
+
+      expect(deployment.template.parameters.appServicePlanSkuTier.defaultValue).toEqual("ElasticPremium");
+      expect(deployment.template.parameters.appServicePlanSkuName.defaultValue).toEqual("EP1");
+
+      expect(deployment.template.resources[0].tags).toMatchObject(sls.service.provider.tags);
+
     });
   });
 
@@ -267,21 +318,75 @@ describe("Arm Service", () => {
       };
 
       sls.service.provider["environment"] = environmentConfig
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       sls.service.provider["os"] = "windows";
 
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
       await service.deployTemplate(deployment);
 
       const appSettings: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites\")].properties.siteConfig.appSettings[*]");
-     
+
       expect(appSettings.find((setting) => setting.name === "PARAM_1")).toEqual({ name: "PARAM_1", value: environmentConfig.PARAM_1 });
       expect(appSettings.find((setting) => setting.name === "PARAM_2")).toEqual({ name: "PARAM_2", value: environmentConfig.PARAM_2 });
       expect(appSettings.find((setting) => setting.name === "PARAM_3")).toEqual({ name: "PARAM_3", value: environmentConfig.PARAM_3 });
     });
 
+    it("Sets environment variables as sticky with slots (production)", async () => {
+      const environmentConfig: any = {
+        PARAM_1: "1",
+        PARAM_2: "2",
+        PARAM_3: "3",
+      };
+
+      sls.service.provider["environment"] = environmentConfig
+      sls.service.provider.runtime = "nodejs12.x";
+      sls.service.provider.deployment = {
+        slot: "production",
+        slotStickyEnvironmentVariables: ["PARAM_1", "PARAM_2"],
+      };
+
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
+      await service.deployTemplate(deployment);
+
+      const appSettings: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites\")].properties.siteConfig.appSettings[*]");
+      expect(appSettings.find((setting) => setting.name === "PARAM_1")).toEqual({ name: "PARAM_1", value: environmentConfig.PARAM_1 });
+      expect(appSettings.find((setting) => setting.name === "PARAM_2")).toEqual({ name: "PARAM_2", value: environmentConfig.PARAM_2 });
+      expect(appSettings.find((setting) => setting.name === "PARAM_3")).toEqual({ name: "PARAM_3", value: environmentConfig.PARAM_3 });
+
+      const appSettingNames: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites\")].resources[?(@.name==\"slotconfignames\")].properties.appSettingNames[*]");
+      expect(appSettingNames).toEqual(expect.arrayContaining(["PARAM_1", "PARAM_2"]))
+    });
+
+    it("Sets environment variables as sticky with slots (staging)", async () => {
+      const environmentConfig: any = {
+        PARAM_1: "1",
+        PARAM_2: "2",
+        PARAM_3: "3",
+      };
+
+      sls.service.provider["environment"] = environmentConfig
+      sls.service.provider.runtime = "nodejs12.x";
+      sls.service.provider.deployment = {
+        slot: "staging",
+        slotStickyEnvironmentVariables: ["PARAM_1", "PARAM_2"],
+      };
+
+      const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
+      await service.deployTemplate(deployment);
+
+      const appSettings: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites/slots\")].properties.siteConfig.appSettings[*]");
+      expect(appSettings.find((setting) => setting.name === "PARAM_1")).toEqual({ name: "PARAM_1", value: environmentConfig.PARAM_1 });
+      expect(appSettings.find((setting) => setting.name === "PARAM_2")).toEqual({ name: "PARAM_2", value: environmentConfig.PARAM_2 });
+      expect(appSettings.find((setting) => setting.name === "PARAM_3")).toEqual({ name: "PARAM_3", value: environmentConfig.PARAM_3 });
+
+      const appSettingNames: any[] = jsonpath.query(deployment.template, "$.resources[?(@.type==\"Microsoft.Web/sites\")].resources[?(@.name==\"slotconfignames\")].properties.appSettingNames[*]");
+      // slotconfignames should only be set during production slot deployment
+      // https://anthonychu.ca/post/azure-app-service-resource-templates-tips-tricks/
+      expect(appSettingNames).toEqual([])
+    });
+
     it("Deploys ARM template via resources REST API", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       await service.deployTemplate(deployment);
@@ -345,7 +450,7 @@ describe("Arm Service", () => {
     });
 
     it("Does not try to include paramaters with a value that is undefined", async () => {
-      sls.service.provider.runtime = Runtime.NODE10;
+      sls.service.provider.runtime = Runtime.NODE12;
       const deployment = await service.createDeploymentFromType(ArmTemplateType.Consumption);
 
       expect(deployment.parameters.functionAppExtensionVersion).not.toBeUndefined();

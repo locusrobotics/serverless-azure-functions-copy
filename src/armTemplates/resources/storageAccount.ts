@@ -52,7 +52,7 @@ export class StorageAccountResource implements ArmResourceTemplateGenerator {
           name: "[parameters('storageAccountName')]",
           type: "Microsoft.Storage/storageAccounts",
           location: "[parameters('location')]",
-          kind: "Storage",
+          kind: "StorageV2",
           properties: {
             accountType: "[parameters('storageAccountSkuName')]"
           },

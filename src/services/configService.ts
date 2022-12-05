@@ -1,5 +1,6 @@
 import Serverless from "serverless";
 import Service from "serverless/classes/Service";
+import configConstants from "../config";
 import { CliCommand, CliCommandFactory } from "../config/cliCommandFactory";
 import { BuildMode, FunctionAppOS, isNodeRuntime, isPythonRuntime, Runtime, supportedRuntimes, supportedRuntimeSet, isCompiledRuntime } from "../config/runtime";
 import { DeploymentConfig, ServerlessAzureConfig, ServerlessAzureFunctionConfig } from "../models/serverless";
@@ -77,6 +78,13 @@ export class ConfigService {
       this.config,
       (this.config.provider.deployment.rollback) ? `t${this.getTimestamp()}` : null
     )
+  }
+
+  /**
+   * Name of deployment slot
+   */
+  public getDeploymentSlot(): string {
+    return this.config.provider.deployment.slot;
   }
 
   public getDeploymentConfig(): DeploymentConfig {
@@ -175,10 +183,18 @@ export class ConfigService {
       config.provider.prefix = prefix;
     }
 
+    if (!config.provider.deployment) {
+      config.provider.deployment = {};
+    }
+
+    if (!config.provider.functionApp) {
+      config.provider.functionApp = {};
+    }
+
     if (!config.provider.os) {
       config.provider.os = os;
     }
-    
+
     if (!config.provider.type) {
       config.provider.type = "consumption"
     }
@@ -210,6 +226,10 @@ export class ConfigService {
       os
     } = config.provider;
 
+    const {
+      slot
+    } = config.provider.deployment;
+
     const options: AzureNamingServiceOptions = {
       config: config,
       suffix: `${config.service}-rg`,
@@ -239,6 +259,12 @@ export class ConfigService {
     if (!runtime) {
       throw new Error(`Runtime undefined. Runtimes supported: ${supportedRuntimes.join(",")}`);
     }
+
+    config.provider.deployment = {
+      ...configConstants.deploymentConfig,
+      ...deployment,
+      slot: this.getOption("slot", slot),
+    };
 
     if (!supportedRuntimeSet.has(runtime)) {
       throw new Error(`Runtime ${runtime} is not supported. Runtimes supported: ${supportedRuntimes.join(",")}`)
@@ -311,7 +337,7 @@ export class ConfigService {
         constants.tmpBuildDir
       ],
     });
-    
+
     this.cliCommandFactory.registerCommand(`${Runtime.DOTNET22}-${BuildMode.DEBUG}`, {
       command: "dotnet",
       args: [
@@ -324,7 +350,7 @@ export class ConfigService {
         constants.tmpBuildDir
       ],
     });
-    
+
     this.cliCommandFactory.registerCommand(`${Runtime.DOTNET31}-${BuildMode.RELEASE}`, {
       command: "dotnet",
       args: [
@@ -337,7 +363,7 @@ export class ConfigService {
         constants.tmpBuildDir
       ],
     });
-    
+
     this.cliCommandFactory.registerCommand(`${Runtime.DOTNET31}-${BuildMode.DEBUG}`, {
       command: "dotnet",
       args: [

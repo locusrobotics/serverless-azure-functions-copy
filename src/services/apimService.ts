@@ -34,8 +34,13 @@ export class ApimService extends BaseService {
     if (typeof (this.apimConfig) === "boolean") {
       this.apimConfig = {
         name: null,
+        resourceGroup: null,
         apis: [],
       };
+    }
+
+    if (!this.apimConfig.apimSubscriptionId) {
+      this.apimConfig.apimSubscriptionId = this.config.provider.subscriptionId;
     }
 
     if (!this.apimConfig.name) {
@@ -50,7 +55,11 @@ export class ApimService extends BaseService {
       this.apimConfig.backends = [];
     }
 
-    this.apimClient = new ApiManagementClient(this.credentials, this.subscriptionId);
+    if (this.apimConfig.resourceGroup) {
+      this.resourceGroup = this.apimConfig.resourceGroup;
+    }
+
+    this.apimClient = new ApiManagementClient(this.credentials, this.apimConfig.apimSubscriptionId);
     this.functionAppService = new FunctionAppService(serverless, options);
   }
 

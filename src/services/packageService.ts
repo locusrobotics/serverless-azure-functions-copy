@@ -32,6 +32,11 @@ export class PackageService extends BaseService {
         return this.createBinding(functionName, metaData);
       });
     await Promise.all(createEventsPromises);
+    if (fs.existsSync("dynamichost.json")) {
+      const hostData = fs.readFileSync("dynamichost.json").toString();
+      const newHostData = hostData.replace("RESOURCE_KEY", process.env.RESOURCE_KEY);
+      fs.writeFileSync("host.json", newHostData);
+    }
   }
 
   /**
