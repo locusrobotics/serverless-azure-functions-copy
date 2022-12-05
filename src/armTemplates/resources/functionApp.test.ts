@@ -17,7 +17,7 @@ describe("Function App Resource", () => {
       region,
       stage,
       resourceGroup: resourceGroupName,
-      runtime: Runtime.NODE10,
+      runtime: Runtime.NODE14,
     },
     service: ""
   } as any;
@@ -80,7 +80,7 @@ describe("Function App Resource", () => {
         const config = getConfig(FunctionAppOS.LINUX, Runtime.PYTHON36);
 
         const resource = new FunctionAppResource();
-  
+
         const { appSettings } = resource.getTemplate(config).resources[0].properties.siteConfig;
         expect(appSettings).toEqual([
           {
@@ -103,10 +103,10 @@ describe("Function App Resource", () => {
       });
 
       it("gets correct app settings - node", () => {
-        const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE10);
-    
+        const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE14);
+
         const resource = new FunctionAppResource();
-  
+
         const { appSettings } = resource.getTemplate(config).resources[0].properties.siteConfig;
         expect(appSettings).toEqual([
           {
@@ -135,10 +135,10 @@ describe("Function App Resource", () => {
 
     describe("Windows", () => {
       it("gets correct app settings - node", () => {
-        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE10);
-    
+        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE14);
+
         const resource = new FunctionAppResource();
-  
+
         const { appSettings } = resource.getTemplate(config).resources[0].properties.siteConfig;
         expect(appSettings).toEqual([
           {
@@ -180,34 +180,51 @@ describe("Function App Resource", () => {
 
   describe("Arm Parameters", () => {
     describe("Linux", () => {
-      it("gets correct parameters - node 10", () => {
-        const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE10);
-    
+      it("gets correct parameters - node 16", () => {
+        const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE16);
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        const { 
+        const {
           linuxFxVersion,
           functionAppNodeVersion,
         } = params;
 
         assertLinuxParams(params);
-    
-        expect(linuxFxVersion.value).toEqual("NODE|10");
-        expect(functionAppNodeVersion.value).toEqual("~10");
+
+        expect(linuxFxVersion.value).toEqual("NODE|16");
+        expect(functionAppNodeVersion.value).toEqual("~16");
+      });
+
+      it("gets correct parameters - node 14", () => {
+        const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE14);
+
+        const resource = new FunctionAppResource();
+
+        const params = resource.getParameters(config);
+        const {
+          linuxFxVersion,
+          functionAppNodeVersion,
+        } = params;
+
+        assertLinuxParams(params);
+
+        expect(linuxFxVersion.value).toEqual("NODE|14");
+        expect(functionAppNodeVersion.value).toEqual("~14");
       });
 
       it("gets correct parameters - node 12", () => {
         const config = getConfig(FunctionAppOS.LINUX, Runtime.NODE12);
-    
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        const { 
+        const {
           linuxFxVersion,
           functionAppNodeVersion,
         } = params;
-        
+
         assertLinuxParams(params);
 
         expect(linuxFxVersion.value).toEqual("NODE|12");
@@ -216,58 +233,58 @@ describe("Function App Resource", () => {
 
       it("gets correct parameters - python 3.6", () => {
         const config = getConfig(FunctionAppOS.LINUX, Runtime.PYTHON36);
-    
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        const { 
+        const {
           linuxFxVersion,
           functionAppNodeVersion,
         } = params;
 
         assertLinuxParams(params);
-    
+
         expect(linuxFxVersion.value).toEqual("PYTHON|3.6");
         expect(functionAppNodeVersion.value).toBeUndefined();
       });
 
       it("gets correct parameters - python 3.7", () => {
         const config = getConfig(FunctionAppOS.LINUX, Runtime.PYTHON37);
-    
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        const { 
+        const {
           linuxFxVersion,
           functionAppNodeVersion,
         } = params;
 
         assertLinuxParams(params);
-    
+
         expect(linuxFxVersion.value).toEqual("PYTHON|3.7");
         expect(functionAppNodeVersion.value).toBeUndefined();
       });
 
       it("gets correct parameters - python 3.8", () => {
         const config = getConfig(FunctionAppOS.LINUX, Runtime.PYTHON38);
-    
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        const { 
+        const {
           linuxFxVersion,
           functionAppNodeVersion,
         } = params;
 
         assertLinuxParams(params);
-    
+
         expect(linuxFxVersion.value).toEqual("PYTHON|3.8");
         expect(functionAppNodeVersion.value).toBeUndefined();
       });
 
-      
+
       function assertLinuxParams(parameters: ArmParameters) {
-        const { 
+        const {
           functionAppKind,
           functionAppReserved,
           functionAppEnableRemoteBuild,
@@ -280,29 +297,29 @@ describe("Function App Resource", () => {
     });
 
     describe("Windows", () => {
-      it("gets correct parameters - node 10", () => {
-        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE10);
-    
+      it("gets correct parameters - node 14", () => {
+        const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE14);
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
         const {
           functionAppNodeVersion,
         } = params;
-    
+
         assertWindowsParams(params);
 
-        expect(functionAppNodeVersion.value).toEqual("~10");
+        expect(functionAppNodeVersion.value).toEqual("~14");
       });
 
       it("gets correct parameters - node 12", () => {
         const config = getConfig(FunctionAppOS.WINDOWS, Runtime.NODE12);
-    
+
         const resource = new FunctionAppResource();
-        
+
         const params = resource.getParameters(config);
-        
-        const { 
+
+        const {
           functionAppNodeVersion,
         } = params;
 

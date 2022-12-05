@@ -73,7 +73,7 @@ describe("Azure Key Vault Service", () => {
         resourceGroup: "test-sls-rg",
         region: "West US",
         keyVault,
-        runtime: Runtime.NODE10,
+        runtime: Runtime.NODE14,
       }
     };
 

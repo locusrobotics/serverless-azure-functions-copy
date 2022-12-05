@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        runtime: [ node10, node12 ]
+        runtime: [ node12, node14 ]
         os: [ linux, windows ]
       fail-fast: false
     steps:
     - uses: actions/checkout@master
-    
+
     # Install dependencies and cache them
     - name: Cache node_modules
       id: cache-modules
@@ -29,11 +29,11 @@ jobs:
     - name: npm install
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
-    
+
     # Build plugin
     - name: build
       run: tsc
-    
+
     # Run the integration test
     - name: package, deploy, invoke, remove
       run: npm run test:int -- -t deploy.* -d '${{ matrix.runtime }}-${{ matrix.os }}(-webpack)?'
@@ -42,4 +42,3 @@ jobs:
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID}}
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET}}
         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID}}
-  

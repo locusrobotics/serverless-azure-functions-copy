@@ -16,7 +16,7 @@ describe("Naming Service", () => {
       region: "westus",
       stage: "dev",
       resourceGroup,
-      runtime: Runtime.NODE10,
+      runtime: Runtime.NODE14,
     },
     service: "test-api",
     package: {

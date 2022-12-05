@@ -1,12 +1,12 @@
-service: nd10-win-web
+service: nd14-lin
 
 provider:
   name: azure
   prefix: int
   stage: qa
   region: West Europe
-  runtime: nodejs10
-  os: windows
+  runtime: nodejs14
+  os: linux
   apim: true
 
   environment:
@@ -29,4 +29,4 @@ functions:
           - GET
         authLevel: anonymous
 
- 
+
