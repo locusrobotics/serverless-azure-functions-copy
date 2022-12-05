@@ -403,7 +403,7 @@ export class MockFactory {
       deploymentName: "myDeploymentName",
       region: "eastus2",
       stage: "dev",
-      runtime: Runtime.NODE10,
+      runtime: Runtime.NODE14,
       ...provider
     } as ServerlessAzureProvider
     return args;

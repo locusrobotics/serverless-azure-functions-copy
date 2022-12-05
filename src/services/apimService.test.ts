@@ -38,7 +38,7 @@ describe("APIM Service", () => {
         resourceGroup: "test-sls-rg",
         region: "West US",
         apim: apimConfig,
-        runtime: Runtime.NODE10
+        runtime: Runtime.NODE14
       },
     };
 

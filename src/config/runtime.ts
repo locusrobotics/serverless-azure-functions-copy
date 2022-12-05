@@ -1,8 +1,8 @@
 
 export enum Runtime {
-  NODE10 = "nodejs10",
   NODE12 = "nodejs12",
   NODE14 = "nodejs14",
+  NODE16 = "nodejs16",
   PYTHON36 = "python3.6",
   PYTHON37 = "python3.7",
   PYTHON38 = "python3.8",
@@ -11,9 +11,9 @@ export enum Runtime {
 }
 
 export const supportedRuntimes = [
-  Runtime.NODE10,
   Runtime.NODE12,
   Runtime.NODE14,
+  Runtime.NODE16,
   Runtime.PYTHON36,
   Runtime.PYTHON37,
   Runtime.PYTHON38,
@@ -89,9 +89,9 @@ export enum FunctionAppOS {
 }
 
 export const dockerImages = {
-  nodejs10: "NODE|10",
   nodejs12: "NODE|12",
   nodejs14: "NODE|14",
+  nodejs16: "NODE|16",
   "python3.6": "PYTHON|3.6",
   "python3.7": "PYTHON|3.7",
   "python3.8": "PYTHON|3.8",

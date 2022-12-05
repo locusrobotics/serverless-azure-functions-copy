@@ -23,7 +23,7 @@ describe("Azure Hosting Environment Resource", () => {
         region,
         stage,
         resourceGroup: resourceGroupName,
-        runtime: Runtime.NODE10
+        runtime: Runtime.NODE14
       },
       service: ""
     } as any;
@@ -46,7 +46,7 @@ describe("Azure Hosting Environment Resource", () => {
         region,
         stage,
         resourceGroup: resourceGroupName,
-        runtime: Runtime.NODE10
+        runtime: Runtime.NODE14
       },
       service: ""
     } as any;
