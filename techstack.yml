@@ -1,0 +1,704 @@
+repo_name: locusrobotics/serverless-azure-functions-copy
+report_id: 2308ef7247c969b15a873c254b169595
+repo_type: Public
+timestamp: '2023-11-09T16:27:07+00:00'
+requested_by: sls-az-func
+provider: github
+branch: master
+detected_tools_count: 52
+tools:
+- name: C#
+  description: Simple, general-purpose, object-oriented programming language for the
+    .NET platform
+  website_url: http://csharp.net
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1015/1200px-C_Sharp_wordmark.svg.png
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source: Repo Metadata
+- name: Python
+  description: A clear and powerful object-oriented programming language, comparable
+    to Perl, Ruby, Scheme, or Java.
+  website_url: https://www.python.org
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source: Repo Metadata
+- name: TypeScript
+  description: A superset of JavaScript that compiles to clean JavaScript output
+  website_url: http://www.typescriptlang.org
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1612/bynNY5dJ.jpg
+  detection_source: Repo Metadata
+- name: ".NET"
+  description: A free, cross-platform, open source developer platform for building
+    many different types of applications
+  website_url: http://www.microsoft.com/net/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/1014/IoPy1dce_400x400.png
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: ".NET Core"
+  description: An Open Source, General-Purpose Development Platform Maintained by
+    Microsoft and the .NET Community
+  website_url: https://docs.microsoft.com/en-us/dotnet/core/
+  version: '2.2'
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/6403/default_91fc1f0ee315262794273aa1387eaf8fed8436e6.png
+  detection_source_url: integrationTests/configurations/dotnet22-linux/sls-csharp.csproj
+  detection_source: integrationTests/configurations/dotnet31-windows/sls-csharp.csproj
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-19 21:50:25.000000000 Z
+- name: ASP.NET Core
+  description: A cross-platform .NET framework for building modern cloud-based web
+    applications on Windows, Mac, or Linux
+  website_url: docs.microsoft.com/en-us/aspnet/core/
+  version: '2.2'
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/11331/asp.net-core.png
+  detection_source_url: integrationTests/configurations/dotnet22-linux/sls-csharp.csproj
+  detection_source: integrationTests/configurations/dotnet31-windows/sls-csharp.csproj
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-19 21:50:25.000000000 Z
+- name: Node.js
+  description: A platform built on Chrome's JavaScript runtime for easily building
+    fast, scalable network applications
+  website_url: http://nodejs.org/
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/1011/n1JRsFeB_400x400.png
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: Azure Storage
+  description: Reliable, economical cloud storage for data big and small
+  website_url: http://azure.microsoft.com/en-us/services/storage/
+  open_source: false
+  hosted_saas: true
+  category: Data Stores
+  sub_category: Cloud Storage
+  image_url: https://img.stackshare.io/service/2099/azureStorage.png
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-16 23:04:18.000000000 Z
+- name: Babel
+  description: Use next generation JavaScript, today.
+  website_url: http://babeljs.io/
+  version: 7.4.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: JavaScript Compilers
+  image_url: https://img.stackshare.io/service/2739/-1wfGjNw.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-06-06 18:12:10.000000000 Z
+- name: Codecov
+  description: Hosted coverage reports with awesome features to enhance your CI workflow
+  website_url: https://codecov.io/
+  open_source: false
+  hosted_saas: true
+  category: Build, Test, Deploy
+  sub_category: Code Coverage
+  image_url: https://img.stackshare.io/service/2673/Codecov_Mark_Circle_Pink.png
+  detection_source: ".codecov.yml"
+  last_updated_by: My
+  last_updated_on: 2019-08-28 16:53:53.000000000 Z
+- name: ESLint
+  description: The fully pluggable JavaScript code quality tool
+  website_url: http://eslint.org/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Code Review
+  image_url: https://img.stackshare.io/service/3337/Q4L7Jncy.jpg
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
+- name: GitHub Actions
+  description: Automate your workflow from idea to production
+  website_url: https://github.com/features/actions
+  open_source: false
+  hosted_saas: true
+  category: Build, Test, Deploy
+  sub_category: Continuous Integration
+  image_url: https://img.stackshare.io/service/11563/actions.png
+  detection_source: ".github/workflows/main.yml"
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-19 21:50:25.000000000 Z
+- name: Jest
+  description: Painless JavaScript Unit Testing
+  website_url: http://facebook.github.io/jest/
+  version: 24.8.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Javascript Testing Framework
+  image_url: https://img.stackshare.io/service/830/jest.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: NuGet
+  description: The package manager for .NET
+  website_url: https://www.nuget.org/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Package Managers
+  image_url: https://img.stackshare.io/service/2637/6I3oEOP4_400x400.jpg
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: Webpack
+  description: A bundler for javascript and friends
+  website_url: http://webpack.js.org
+  version: 3.12.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: JS Build Tools / JS Task Runners
+  image_url: https://img.stackshare.io/service/1682/IMG_4636.PNG
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: integrationTests/configurations/node12-windows-webpack/webpack.config.js
+  last_updated_by: LironEr
+  last_updated_on: 2020-06-02 01:50:53.000000000 Z
+- name: npm
+  description: The package manager for JavaScript.
+  website_url: https://www.npmjs.com/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: Azure Functions
+  description: Listen and react to events across your stack
+  website_url: https://azure.microsoft.com/en-us/services/functions/
+  open_source: false
+  hosted_saas: true
+  category: Application Hosting
+  sub_category: Serverless / Task Processing
+  image_url: https://img.stackshare.io/service/4851/default_1c86e0d45d685cb73aa9a39a658159f6199de49d.png
+  detection_source: package.json
+  last_updated_by: LironEr
+  last_updated_on: 2020-06-02 12:08:41.000000000 Z
+- name: Serverless
+  description: The most widely-adopted toolkit for building serverless applications
+  website_url: https://github.com/serverless/serverless
+  version: 1.71.3
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Application Hosting
+  sub_category: Serverless / Task Processing
+  image_url: https://img.stackshare.io/service/5095/serverless-logo.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: LironEr
+  last_updated_on: 2020-06-02 12:08:41.000000000 Z
+- name: Lodash
+  description: A JavaScript utility library
+  website_url: https://lodash.com
+  version: 4.17.15
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript Utilities & Libraries
+  image_url: https://img.stackshare.io/service/2438/lodash.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-05-23 00:46:47.000000000 Z
+- name: Shell
+  description: A shell is a text-based terminal, used for manipulating programs and
+    files. Shell scripts typically manage program execution.
+  website_url: https://en.wikipedia.org/wiki/Shell_script
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source: Repo Metadata
+- name: axios
+  description: Promise based HTTP client for the browser and node.js
+  website_url: https://github.com/mzabriskie/axios
+  version: 0.19.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript Utilities & Libraries
+  image_url: https://img.stackshare.io/no-img-open-source.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-06-12 20:29:02.000000000 Z
+- name: "@babel/runtime"
+  description: Babel's modular runtime helpers
+  package_url: https://www.npmjs.com/@babel/runtime
+  version: 7.4.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15934/default_54b691c123fc8979741e800e4dcd3936c0f3b246.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-06-06 18:12:10.000000000 Z
+- name: "@types/jest"
+  description: TypeScript definitions for Jest
+  package_url: https://www.npmjs.com/@types/jest
+  version: 24.0.13
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15840/default_004658cda9b38934f2871435e9dc15608c86e8be.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-21 03:52:49.000000000 Z
+- name: "@types/lodash"
+  description: TypeScript definitions for Lo-Dash
+  package_url: https://www.npmjs.com/@types/lodash
+  version: 4.14.154
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15945/default_54b691c123fc8979741e800e4dcd3936c0f3b246.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-10-25 22:26:17.000000000 Z
+- name: "@types/request"
+  description: TypeScript definitions for request
+  package_url: https://www.npmjs.com/@types/request
+  version: 2.48.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16354/default_17385ab3aa01d4c295c08d4a9736140df691c5e9.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-10-25 22:26:17.000000000 Z
+- name: "@types/xml2js"
+  description: TypeScript definitions for node-xml2js
+  package_url: https://www.npmjs.com/@types/xml2js
+  version: 0.4.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17763/default_b527ab15473225ca7c2e9b197c9726e92ac97de8.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-12 22:25:11.000000000 Z
+- name: "@typescript-eslint/eslint-plugin"
+  description: TypeScript plugin for ESLint
+  package_url: https://www.npmjs.com/@typescript-eslint/eslint-plugin
+  version: 1.9.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15982/default_8b5680d4e916298d08363c291a0d6e34c07ceb15.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-10-25 22:26:17.000000000 Z
+- name: "@typescript-eslint/parser"
+  description: An ESLint custom parser which leverages TypeScript ESTree
+  package_url: https://www.npmjs.com/@typescript-eslint/parser
+  version: 1.9.0
+  license: BSD-2-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15980/default_732016a20524708efe7a4c77497fe9bfeea19ba6.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-10-25 22:26:17.000000000 Z
+- name: acorn
+  description: ECMAScript parser
+  package_url: https://www.npmjs.com/acorn
+  version: 6.4.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16344/default_9ae0e75ed749aca83d89f7e1ccb309be2bfc610e.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Phil
+  last_updated_on: 2019-09-04 20:16:28.000000000 Z
+- name: axios-mock-adapter
+  description: Axios adapter that allows to easily mock requests
+  package_url: https://www.npmjs.com/axios-mock-adapter
+  version: 1.16.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17391/default_e9c4b89784d4fe5d59f93b4a54dd8910ea23e5de.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-07-25 17:39:39.000000000 Z
+- name: babel-jest
+  description: Jest plugin to use babel for transformation
+  package_url: https://www.npmjs.com/babel-jest
+  version: 24.8.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15839/default_4479dbac220be99e50e724b2df6cf415241d71fd.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-21 03:52:49.000000000 Z
+- name: babel-preset-react-app
+  description: Babel preset used by Create React App
+  package_url: https://www.npmjs.com/babel-preset-react-app
+  version: 9.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16089/default_c7b204838197013798409fa2b4dafce450edc7fb.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-06-06 18:12:10.000000000 Z
+- name: conventional-changelog-cli
+  description: Generate a changelog from git metadata
+  package_url: https://www.npmjs.com/conventional-changelog-cli
+  version: 2.0.23
+  license: ISC
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16260/default_9924e5da1d50ea01e52b48e4fae4b1347af5e4ff.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-30 12:47:19.000000000 Z
+- name: cross-spawn
+  description: Cross platform child_process#spawn and child_process#spawnSync
+  package_url: https://www.npmjs.com/cross-spawn
+  version: 6.0.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16069/default_5fd43aeff4d6a935abc13737de01a0355210499d.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-21 03:52:49.000000000 Z
+- name: deep-equal
+  description: Node's assert.deepEqual algorithm
+  package_url: https://www.npmjs.com/deep-equal
+  version: 1.1.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16405/default_5ffcf8d02a3454bd25d27d236025c6d078c3b672.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-08-16 14:53:04.000000000 Z
+- name: jest-cli
+  description: Delightful JavaScript Testing
+  package_url: https://www.npmjs.com/jest-cli
+  version: 24.8.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16022/default_7a465bc85b23fd837cbc038fd1d504632c41a884.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-21 03:52:49.000000000 Z
+- name: js-yaml
+  description: YAML 1.2 parser and serializer
+  package_url: https://www.npmjs.com/js-yaml
+  version: 3.14.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15997/default_f8be85789693a9901dbcfa43c135c60525ae49a1.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-05-31 23:07:22.000000000 Z
+- name: jsonpath
+  description: Query JavaScript objects with JSONPath expressions
+  package_url: https://www.npmjs.com/jsonpath
+  version: 1.0.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17674/default_894a45ad01fa93ac472db719cb1ef1b89f2924f0.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-30 12:47:19.000000000 Z
+- name: md5
+  description: Js function for hashing messages with MD5
+  package_url: https://www.npmjs.com/md5
+  version: 2.2.1
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16342/default_c47f6a56d74fae4d4404d77067b2fa35da6f1924.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: mock-fs
+  description: A configurable mock file system. You know, for testing
+  package_url: https://www.npmjs.com/mock-fs
+  version: 4.10.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16607/default_8bb559d64720e298d7108ccd64281e535c1c76a8.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-07-25 17:39:39.000000000 Z
+- name: open
+  description: Open stuff like URLs, files, executables. Cross-platform
+  package_url: https://www.npmjs.com/open
+  version: 7.0.4
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16245/default_5dfc1810d0882ab844578a326bb8bf19e45e7227.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Wallace Breza
+  last_updated_on: 2019-05-21 14:42:36.000000000 Z
+- name: querystring
+  description: Node's querystring module for all engines
+  package_url: https://www.npmjs.com/querystring
+  version: 0.2.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16418/default_d73092129e1cde5ea9f47f22e2d7c3db7bd6da8d.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-30 12:48:51.000000000 Z
+- name: request
+  description: Simplified HTTP request client
+  package_url: https://www.npmjs.com/request
+  version: 2.88.2
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15823/default_5e5e8ac63beda29f31f1844df64d4b8247570a66.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-05-31 23:07:22.000000000 Z
+  vulnerabilities:
+  - name: Server-Side Request Forgery in Request
+    cve_id: CVE-2023-28155
+    cve_url: https://github.com/advisories/GHSA-p8p7-x288-28g6
+    detected_date: Mar 17
+    severity: moderate
+    first_patched: 
+- name: rimraf
+  description: A deep deletion module for node
+  package_url: https://www.npmjs.com/rimraf
+  version: 2.7.1
+  license: ISC
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15807/default_db4a7791d2f1174547374b9b587bc10fec088a5a.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2019-08-29 21:05:46.000000000 Z
+- name: shx
+  description: Portable Shell Commands for Node
+  package_url: https://www.npmjs.com/shx
+  version: 0.3.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16496/default_55f3303d620c93eecbee69c43373d484f2be492f.png
+  detection_source_url: package-lock.json
+  detection_source: package.json
+  last_updated_by: pragnagopa
+  last_updated_on: 2017-01-30 18:13:32.000000000 Z
+- name: ts-loader
+  description: TypeScript loader for webpack
+  package_url: https://www.npmjs.com/ts-loader
+  version: 7.0.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15938/default_e0a4fb1126d7400f419f0931cf1669947a5bc552.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: examples/typescript-webpack/package.json
+  last_updated_by: LironEr
+  last_updated_on: 2020-06-02 01:50:53.000000000 Z
+- name: ts-node
+  description: TypeScript execution environment and REPL for node.js
+  package_url: https://www.npmjs.com/ts-node
+  version: 3.3.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15830/default_6743ba96cf149a3c3c68a185199f9705d6eff80e.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-30 12:47:19.000000000 Z
+- name: webpack-cli
+  description: CLI for webpack &amp; friends
+  package_url: https://www.npmjs.com/webpack-cli
+  version: 3.3.11
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15826/default_14fd11531839d935f920b6d55bd6f3528c890ad7.png
+  detection_source_url: integrationTests/configurations/node10-windows-webpack/package-lock.json
+  detection_source: integrationTests/configurations/node12-windows-webpack/package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-04-30 12:47:19.000000000 Z
+- name: xml2js
+  description: Simple XML to JavaScript object converter
+  package_url: https://www.npmjs.com/xml2js
+  version: 0.4.23
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16122/default_efe4f0184d007a28e793d89a59e058b742bc9177.png
+  detection_source_url: examples/typescript-webpack/package-lock.json
+  detection_source: package.json
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-12 22:25:11.000000000 Z
+  vulnerabilities:
+  - name: xml2js is vulnerable to prototype pollution
+    cve_id: CVE-2023-0842
+    cve_url: https://github.com/advisories/GHSA-776f-qx25-q3cc
+    detected_date: Apr 8
+    severity: moderate
+    first_patched: 0.5.0
+- name: Microsoft.NETCore.App
+  description: A set of .NET API's that are included in the default .NET Core application
+    model
+  package_url: https://www.nuget.org/Microsoft.NETCore.App
+  version: 2.2.8
+  open_source: false
+  hosted_saas: false
+  category: Libraries
+  sub_category: NuGet Packages
+  image_url: https://img.stackshare.io/package/12847/default_2aeaea161c566d1abfbaf3f2206fda12b1eea9cd.png
+  detection_source_url: integrationTests/configurations/dotnet31-linux/sls-csharp.csproj
+  detection_source: integrationTests/configurations/dotnet31-windows/sls-csharp.csproj
+  last_updated_by: Tanner Barlow
+  last_updated_on: 2020-05-19 21:50:25.000000000 Z
